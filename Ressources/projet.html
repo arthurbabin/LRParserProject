@@ -1,0 +1,339 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<HTML>
+<HEAD>
+   <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <link rel="stylesheet" type="text/css"
+   href="style.css">
+   <TITLE>Projet prog. impérative</TITLE>
+</HEAD>
+<body>
+<h1>
+Programmation impérative, projet 2021
+</h1>
+<h3>Dates et principe</h3>
+Cette page peut être mise à jour, avec informations complémentaires,
+précisions, <em><a href ="projet_2021.html#bonus">questions
+	bonus</a></em>, etc. Pensez à y revenir souvent.<br>
+<hr>
+Projet à rendre pour le <b>9/1/2020</b> à <b>23h59</b>, aucun retard ne sera toléré.<br>
+Des soutenances pourront être organisées ensuite.<br><br>
+
+Lire tout le sujet.<br><br>
+
+Un rendu de projet comprend :
+<ul>
+<li> Un rapport typographié précisant vos choix, les problèmes
+  techniques qui se posent et les solutions trouvées ; il précise en
+  conclusion les limites de votre programme. Le rapport sera de
+  préférence composé avec <span style="font-family:serif;margin-right:-.7em">L<span style="font-size:0.9em;position:relative;top:-.1em;left:-0.4em;">A</span><span style="position:relative;left:-.5em;">T</span><span style="position:relative;top:.2em;left:-.6em;">E</span><span style="position:relative;left:-.7em;">X</span></span>. Le soin apporté à la grammaire et à
+  l'orthographe est largement pris en compte.</li>
+<li> Un code <em>abondamment</em> commenté ; la première partie des
+  commentaires comportera systématiquement les lignes :<br>
+<ol>
+<li><tt>@ requires </tt> décrivant les préconditions : c'est-à-dire
+conditions sur les paramètres pour une bonne utilisation (<b>pas de
+  typage ici</b>),</li>
+<li><tt>@ assigns </tt> listant les zones de mémoire modifiées,</li>
+<li><tt>@ ensures </tt>  décrivant la propriété vraie à la sortie de la
+fonction lorsque les préconditions sont respectées, le cas échéant
+avec mention des comportements en cas de succès et en cas d'échec,</li>
+</ol>
+En outre chaque boucle <tt>while</tt> doit contenir un commentaire
+précisant la raison de sa terminaison (le cas échéant). De même en
+cas d'appels récursifs.<br>  On pourra
+préciser des informations additionnelles si des techniques
+particulières méritent d'être mentionnées.
+<br><br>
+Le code doit enfin compiler sans erreur (évidemment) et sans warning lorsque
+l'option <tt>-Wall</tt> est utilisée. Pour ce sujet, une seule
+exception à cette règle sera tolérée&nbsp;: le warning <code>warning:
+  array subscript has type ‘char’</code> sera acceptable.</p> 
+
+<b>Un code qui ne compile pas
+se verra attribuer la note de 0.</b></p></li>
+<li>Un manuel d'utilisation de votre exécutable, même minimal, est toujours bienvenu.</li>
+</ul>
+Avez-vous lu tout le sujet ?
+
+<hr>
+<h4>Protocole de dépôt</h4>
+<p>
+  Vous devez rendre 
+  <ul> 
+    <li> Votre rapport (en pdf) et</li> 
+    <li> Vos fichiers de code</li>
+  </ul>
+  rassemblés dans une archive tar gzippée identifiée
+  comme <em>votre_prénom_votre_nom</em><tt>.tgz</tt>.<br>  La commande
+  devrait ressembler à :<br>
+  <tt>tar zcvf randolph_carter.tgz rapport.pdf fichiers.c
+    autres_truc_éventuels.c</tt>&hellip;<br>
+  <b>N'OUBLIEZ surtout PAS de mettre le nom identifiant l'archive</b>
+  (donc nouveau) <b>en PREMIER.</b><br>
+  <b>Lisez le man !</b> et testez le contenu de votre archive (une
+  commande comme par exemple&nbsp;:<br> <tt>tar tvf
+  randolph_carter.tgz</tt> doit lister les fichiers et donner leur
+  taille).
+  <ul>
+    <li><b>Une archive qui ne contient pas les fichiers demandés ne
+	sera pas excusable.</b></li>
+    <li><b>**Une archive qui n'est pas au format demandé</b> (archive
+    tar gzippée avec suffixe .tgz) <b>ne sera
+	pas corrigée**</b> donc c'est 0/20.</li>
+  </ul>
+</p>
+<p>
+  <!-- <em>La procédure pour déposer votre dossier vous sera communiquée -->
+  <!-- ultérieurement.</em> -->
+<p>Toute tentative de fraude (plagiat, etc.) sera sanctionnée. Si
+  plusieurs projets ont <b>des sources trop similaires</b> (y compris
+  sur une partie du code uniquement), <em>tous</em> leurs auteurs se
+  verront attribuer la note 0/20. En particulier, il faudra prendre
+  soin de ne pas publier son travail sur un dépôt public (en tout cas
+  pas avant la date de fin de rendu). On évitera également de demander
+  (ou de donner) des conseils trop précis à ses camarades (y compris
+  des promotions précédentes), ces conseils ayant pu être donnés à
+  plusieurs personnes. Les rendus seront comparés deux à deux.
+
+</p>
+<p>
+<b>Procédure de dépôt</b><br> Vous devez enregistrer
+votre archive tgz dans le dépôt dédié au cours IPI (ipi-2021) en vous
+connectant à <a href="http://exam.ensiie.fr">http://exam.ensiie.fr</a>. Ce dépôt sera ouvert
+jusqu'au 9 janvier inclus.
+</p>
+
+<hr>
+
+<h3>Contexte</h3>
+<p>Le but de ce projet est d'implanter un programme qui exécute des
+  automates LR(1). Ces derniers servent à reconnaître des langages de
+  programmation.</p>
+
+<p>Les automates vous seront fournis dans un certain format décrit
+  ci-après. Il n'est pas nécessaire pour ce projet de comprendre
+  par quel moyen de tels automates ont été obtenus.</p>
+
+<h3>Interface</h3>
+
+<p>Le programme va lire un fichier (dont le nom sera passé en
+  paramètre de l'exécutable) qui contiendra une description de
+  l'automate. Il va ensuite lire des lignes sur l'entrée standard. Après
+  chaque ligne lue, il indiquera si la ligne est correcte pour le
+  langage correspondant à l'automate, auquel cas il
+  affichera <code>Accepted</code>, sinon il affichera <code>Rejected</code>.
+</p>
+  
+<p> Par exemple, si le
+  fichier <a href="LR1/dyck.aut"><code>dyck.aut</code></a> contient
+  une description d'un automate correspondant au langage des mots bien
+  parenthésés, on aura le comportement suivant (en bleu les entrées de
+  l'utilisateur)&nbsp;:</p>
+<pre>
+$ <span style="color:#0000FF;">./automaton dyck.aut</span>
+File "dyck.aut" correctly read. Please enter your inputs.
+<span style="color:#0000FF;">()</span>
+Accepted
+<span style="color:#0000FF;">()(())</span>
+Accepted
+<span style="color:#0000FF;">(()</span>
+Rejected
+<span style="color:#0000FF;">(()()))</span>
+Rejected
+<span style="color:#0000FF;">(blabla)</span>
+Rejected
+</pre>
+
+<h3>Automates LR1</h3>
+<h4>Définition et exécution</h4>
+<p>
+  Un automate LR1 est donné par les éléments suivants :</p>
+<ul>
+  <li>un ensemble fini d'états ;</li>
+  <li>un état initial ;</li>
+  <li>un alphabet d'entrée ;</li>
+  <li>un autre alphabet de symboles dit non-terminaux ;</li>
+  <li>une fonction <em>action</em> qui à chaque état et chaque lettre associe une
+  action : cette action peut être soit Rejette, soit Accepte, soit
+    Décale, soit Réduit ;</li>
+  <li>une fonction (partielle) <em>décale</em> qui à un état et une lettre
+  associe un état ; cette fonction n'a besoin d'être définie que quand
+    l'action associée à l'état et la lettre est Décale ;</li>
+  <li>une fonction (partielle) <em>réduit</em> qui à un état associe un
+    entier et un symbole non-terminal ; cette fonction n'a besoin
+    d'être définie que quand l'action associée à l'état et la lettre
+    est Réduit ;</li>
+  <li>une fonction (partielle) <em>branchement</em> qui à un état et un
+  symbole non-terminal associe un état.</li>
+</ul>
+
+<p>Un tel automate fonctionne à l'aide d'une pile
+  d'état. Initialement, cette pile contiendra un unique élément,
+  à savoir l'état initial. Au cours de l'exécution, l'état courant
+  sera celui situé au sommet de la pile.</p>
+
+<p>On essaie de reconnaître un mot en commençant par la lettre la plus
+  à gauche.</p>
+
+<p>Le comportement d'un tel automate est le suivant : si l'état
+  courant est <em>s</em> et la lettre d'entrée est <em>c</em>, on
+  agit en fonction de <em>action(s,c)</em>&nbsp;:</p>
+<dl>
+  <dt>Si c'est Rejette&nbsp;:</dt><dd>on s'arrête, le mot ne fait pas
+  partie du langage.</dd>
+  <dt>Si c'est Accepte&nbsp;:</dt><dd>on s'arrête, le mot fait partie
+  du langage.</dd>
+  <dt>Si c'est Décale&nbsp;:</dt><dd>on empile <em>décale(s,c)</em>,
+  on passe à la lettre suivante de l'entrée.</dd>
+  <dt>Si c'est Réduit&nbsp;:</dt><dd>si <em>réduit(s)</em>
+  vaut <em>(n, A)</em>, on commence par dépiler <em>n</em> états&nbsp;;
+  l'état courant devient alors <em>s'</em>&nbsp;; on empile
+  alors <em>branchement(s',A)</em>&nbsp;;
+  on <b>ne</b> passe <b>pas</b> à la lettre suivante de l'entrée.</dd>
+</dl>
+
+<p>Par exemple, l'automate suivant permet de reconnaître les mots formés
+d'une séquence quelconque de lettres alphabétiques, suivie par un retour à la ligne :</p>
+<img src="word.svg"></img>
+<p>L'état initial est l'état Q0, on
+représente <em>décale</em> par les flèches noires, <em>réduit</em> par
+les bleues et <em>branchement</em> par les rouges.</p>
+
+<p>Sur l'entrée <code>"Ok\n"</code>, en partant de la pile
+contenant Q0, on va avoir l'exécution suivante :</p>
+<ul><li>Pile : <b>Q0</b>, Entrée : <code>"<b>O</b>k\n"</code>
+
+    L'action est Décale. On empile Q1, on avance dans l'entrée.
+
+<li>Pile : Q0 <b>Q1</b>, Entrée : <code>"O<b>k</b>\n"</code>
+
+    L'action est Décale. On empile Q1, on avance dans l'entrée.
+<li>Pile : Q0 Q1 <b>Q1</b>, Entrée : <code>"Ok<b>\n</b>"</code>
+
+    L'action est Réduit. On dépile 0 fois, on suit le branchement par
+  &alpha; et
+  on empile donc Q2.
+  
+<li>Pile : Q0 Q1 Q1 <b>Q2</b>, Entrée : <code>"Ok<b>\n</b>"</code>
+
+    L'action est Réduit. On dépile 2 fois, la pile vaut donc
+  Q0 <b>Q1</b>. On suit le branchement par
+  &alpha; et
+  on empile donc Q2.
+  
+<li>Pile : Q0 Q1 <b>Q2</b>, Entrée : <code>"Ok<b>\n</b>"</code>
+
+    L'action est Réduit. On dépile 2 fois, la pile vaut donc
+  <b>Q0</b>. On suit le branchement par
+  &alpha; et
+  on empile donc Q3.
+  
+<li>Pile : Q0 <b>Q3</b>, Entrée : <code>"Ok<b>\n</b>"</code>
+
+  L'action est Accepte. Le mot est accepté.
+</ul>
+<h4>Implémentation et format du fichier</h4>
+
+
+<p>Les états seront représentés par un entier sur un octet. (On aura
+  donc au maximum 256 états.) L'état initial sera l'état <code>0</code>.</p>
+
+<p>Pour l'alphabet d'entrée mais aussi pour les symboles
+  non-terminaux, on utilisera les caractères dont le code ASCII est
+  compris entre 0 et 127 inclus.</p>
+
+<p>Les actions seront représentées par des entiers&nbsp;: Rejette = 0,
+  Accepte = 1, Décale = 2 et Réduit = 3.</p>
+
+<p>On supposera qu'on ne dépilera jamais plus de 256 états lors d'une
+  réduction, on pourra donc représenter la première composante
+  de <em>réduit(s,c)</em> sur un octet.</p>
+<p>Un fichier contenant une description d'un automate LR(1) respectera
+  le format suivant&nbsp;:</p>
+<ul>
+  <li>une première ligne contenant <code>a <em>n</em></code>
+    où <code><em>n</em></code> est le nombre d'états de l'automate&nbsp;;</li>
+  <li>
+    <code><em>n</em></code> &times; 128 octets représentant les
+    valeurs de <em>action(s,c)</em> pour tout état <em>s</em> et toute
+    lettre <em>c</em> (dans l'ordre <em>action(0,0) action(0, 1)
+      action(0, 2) ... action(0, 127) action(1, 0) action(1, 1) ... action(n,127)</em>), le tout suivi d'un retour à la
+    ligne&nbsp;;</li>
+  <li><code><em>n</em></code> octets représentant la première
+    composante de <em>réduit(s)</em> pour tout état <em>s</em>, le tout suivi d'un retour à la
+    ligne&nbsp;;</li>
+  <li><code><em>n</em></code> octets représentant la deuxième
+    composante de <em>réduit(s)</em> pour tout état <em>s</em>, le tout suivi d'un retour à la
+    ligne&nbsp;;</li>
+  <li>une séquence de groupement de trois octets représentant la fonction
+    partielle <em>décale</em>&nbsp;; un groupement de trois
+    octets <em>s</em> <em>c</em> <em>s'</em> indique
+    que <em>décale(s,c) = s'</em>&nbsp;; cette séquence se terminera
+    par le groupement de trois octets <code>'\255' '\255' '\255'</code>&nbsp;;</li>
+  <li>une séquence de groupement de trois octets représentant la fonction
+    partielle <em>branchement</em>&nbsp;; un groupement de trois
+    octets <em>s</em> <em>A</em> <em>s'</em> indique
+    que <em>branchement(s,A) = s'</em>&nbsp;; cette séquence se terminera
+    par le groupement de trois octets <code>'\255' '\255' '\255'</code>.</li>
+</ul>
+
+<h3>Exemples d'entrées</h3>
+Vous trouverez ici des entrées pour tester votre programme.
+<dl>
+  <dt><a href="LR1/word.aut">Mots</a></dt><dd>C'est l'automate donné
+  en exemple
+  ci-dessus. Il reconnaît les mots formés
+d'une séquence quelconque de lettres alphabétiques, suivie par un retour à la ligne.</dd>
+  <dt><a href="LR1/word_bis.aut">Mots 2</a></dt><dd>Un autre automate qui
+  reconnaît le même langage.</dd>
+  <dt><a href="LR1/dyck.aut">Langage de Dyck</a></dt><dd>
+Cet automate reconnaît les mots utilisant uniquement les
+parenthèses <code>(</code> et <code>)</code> et qui
+    sont bien parenthésés.</dd>
+  <dt><a href="LR1/arith.aut">Expressions arithmétiques</a></dt><dd>
+    Cet automate reconnaît les expressions formées de constantes
+    entières (positives ou négatives), des opérateurs binaires <code>+ - *
+    /</code> et des parenthèses <code>(</code> et <code>)</code>, avec
+    la possibilité de mettre des espaces. </dd>
+</dl>
+D'autres exemples seront probablement proposés d'ici la date de rendu.
+
+<h3><a id="bonus">Bonus</a></h3>
+<ul>
+  <li>
+Quand un mot n'est pas reconnu, indiquer à quel endroit de l'entrée
+l'erreur s'est produite.
+  </li>
+  <li>
+Après avoir lu un fichier <em>nom</em>.aut, écrire dans un fichier <em>nom</em>.dot une sortie au format
+<a href="https://graphviz.org/doc/info/lang.html">DOT</a> pour représenter l'automate comme dans l'exemple ci-dessus.
+  </li>
+</ul>
+
+<h3>Conseils</h3> Pour la récupération d'une entrée de l'utilisateur,
+plutôt que faire un <tt>scanf</tt> directement, il vaut parfois mieux
+récupérer une ligne en entier avec <tt>fgets</tt> puis
+utiliser <tt>sscanf</tt> dessus&nbsp;; on peut utiliser la suite de
+commandes suivantes&nbsp;:
+<pre>
+char buf[256];
+ .
+ .
+ .
+fgets(buf, 256, stdin);
+sscanf(buf, "format", ...);
+</pre>
+
+
+Vous devez avoir lu jusqu'ici avant de commencer.
+
+</body>
+</html>
+
+
+
+
+
+
