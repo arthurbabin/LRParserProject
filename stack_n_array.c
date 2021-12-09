@@ -32,6 +32,10 @@ value pop(stack* s){
     return res;
 };
 
+value head(stack s){
+    return s->v;
+}
+
 void printStack(stack s){
     stack rec = s;
     while(!stackIsEmpty(rec)){

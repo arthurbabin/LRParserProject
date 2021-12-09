@@ -9,6 +9,8 @@ void push(stack*, value);
 
 value pop(stack*);
 
+value head(stack);
+
 void printStack(stack);
 
 value* createEmptyArray(int);

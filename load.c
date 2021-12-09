@@ -95,3 +95,56 @@ void loadAutomaton(automaton *aut, char* path_to_automaton){
         loadInfosFromBuffer(aut,buffer);
     }
 }
+
+int findShiftNumber(automaton* aut, int state, int c){
+    return 0;
+}
+
+int findConnectNumber(automaton* aut, int state, int c){
+    return 0;
+}
+
+int recognize(automaton* aut, stack user_input){
+    stack sta = createEmptyStack();
+    push(&sta,0);
+    while(!stackIsEmpty(sta)){
+        value curr_char = pop(&user_input);
+        value curr_state = head(sta);
+        int action_number = (*aut)->action[curr_state * 128 + curr_char];
+        switch (action_number) {
+            case 1:{
+                // accept
+                return 1;
+                break;
+            }
+
+            case 2: {
+                // shift
+                int shift_number = findShiftNumber(aut, curr_state,curr_char);
+                push(&sta,shift_number);
+                break;
+            }
+            
+
+            case 3: {
+                // reduce
+                int reduce_number = (*aut)->reduce[curr_state];
+                int reduce_char = (*aut)->reduce[curr_state +(*aut)->nb_states];
+                for(int i=0;i<reduce_number;i+=1){
+                    pop(&sta);
+                }
+                // connect
+                int connect_state = head(sta);
+                int connect_number = findConnectNumber(aut, connect_state, reduce_char);
+                push(&sta, connect_number);
+                push(&user_input, curr_char);
+                break;
+            }
+            
+            default:
+            // reject
+            return 0;
+        }
+    }
+    return 0;
+}
