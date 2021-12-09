@@ -34,13 +34,31 @@ void test(){
     testStack();
     testArray();
     testAutomaton();
-    
 }
 
+void getUserInput(char* buf){
+    fgets(buf, 256, stdin);
+    sscanf(buf, "%hhu",buf);
+}
+
+void dispUserInput(char* buf){
+    printf("= [");
+    for(int i=0;i<256;i+=1){
+        if(buf[i]==10){
+            i=256;
+            printf(" \\n]\n");
+        } else {
+            printf("%4i,",buf[i]);
+        }
+    }
+}
 
 int main(int argc, char** argv){
+    char user_input[256];
     if(argc==1){
         test();
+        getUserInput(user_input);
+        dispUserInput(user_input);
         return 0;
     } else if(argc != 2){
         fprintf(stderr,"Error usage: %s path_to_file\n",argv[0]);
@@ -48,7 +66,8 @@ int main(int argc, char** argv){
     } else {
         automaton aut = createEmptyAutomaton();
         loadAutomaton(&aut, argv[1]);
-        printAutomaton(aut);
+        printf("File %s correctly read, please enter your inputs [^C to escape] :\n",argv[1]);
+        getUserInput(user_input);
         return 0;
     }
 }
