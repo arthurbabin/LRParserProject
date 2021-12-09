@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "stack_n_array.h": "c",
+        "algorithm": "c",
+        "numeric": "c",
+        "automaton.h": "c"
+    }
+}

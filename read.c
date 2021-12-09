@@ -3,51 +3,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-
-typedef struct Step {
-    int s;
-    struct Step* next;
-} *Stack;
-
-Stack create_empty_stack() {
-    return NULL;
-}
-
-int is_empty(Stack l) {
-    return l == NULL;
-}
-
-Stack stack(Stack l, int e){
-    Stack new = malloc(sizeof(struct Step));
-    new->s = e;
-    new->next = l;
-    return new;
-}
-
-int pop(Stack l){
-    int res = l->s;
-    l = l->next;
-    return res;
-}
-
-void printStack(Stack l){
-    while(!is_empty(l)){
-        printf("[%i] -> ",l->s);
-        l = l->next;
-    }
-    printf("[]\n\n");
-}
-
-int convertBase10to(int x, int b){
-    int res = 0;
-    int i = 1;
-    while(x!=0){
-        res +=(x%b) * i;
-        x = x/b;
-        i = i * 10;
-    }
-    return res;
-}
+#include "stack_n_array.h"
 
 void getGroupMarkers(int* nb_states, int* start_action, int* start1_reduce, int* start2_reduce, int* start_shift, int* start_connect, unsigned char buffer[]){
     int i = 2;
@@ -88,7 +44,6 @@ void afficherAut(unsigned char buffer[], int size){
     int test = 0;
     int countenter = 0;
     int a,b,c;
-    int base = 10;
     for(int i = 0; i<size; i++) {
         if (buffer[i]==10 && countenter<4){
             countenter+=1;
@@ -99,15 +54,15 @@ void afficherAut(unsigned char buffer[], int size){
             b = buffer[i+1];
             c = buffer[i+2];
             if (a==173 && b==173 && c==173){
-                printf("%i %i %i \n", convertBase10to(a,base),convertBase10to(b,base),convertBase10to(c,base));
+                printf("%i %i %i \n",a,b,c);
                 printf("\n => bloc de trois \n\n");
             } else {
-                printf("%i %i %i \n", convertBase10to(a,base),convertBase10to(b,base),convertBase10to(c,base));
+                printf("%i %c %i \n",a,b,c);
             }
             i+=2;
             test+=1;
         } else {
-            printf("%i ", convertBase10to(buffer[i],base));
+            printf("%i ", buffer[i]);
             test+=1;
         }
     }
@@ -123,7 +78,7 @@ void afficherAut(unsigned char buffer[], int size){
 
 int main(int argc, char** argv){
     if(argc != 2){
-        fprintf(stderr,"Error usage: %s path_to_file",argv[0]);
+        fprintf(stderr,"Error usage: %s path_to_file\n",argv[0]);
         return 1;
     }
     struct stat properties;
