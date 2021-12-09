@@ -1,5 +1,5 @@
 #include "stack_n_array.h"
-#include "automaton.h"
+#include "load.h"
 #include <stdlib.h>
 #include <stdio.h>
 

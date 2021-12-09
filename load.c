@@ -1,4 +1,4 @@
-#include "automaton.h"
+#include "load.h"
 #include "stack_n_array.h"
 
 struct automaton_abs {
@@ -16,7 +16,7 @@ automaton createEmptyAutomaton(){
     return new;
 }
 
-void getGroupMarkers(automaton* aut, unsigned char buffer[]){
+void loadInfosFromBuffer(automaton* aut, unsigned char buffer[]){
     int reader = 2;
     int nb_states = 0;
     while(buffer[reader]!=10){
@@ -92,9 +92,6 @@ void loadAutomaton(automaton *aut, char* path_to_automaton){
             return;
         }
         fread(buffer,sizeof(buffer),1,fin);
-        // int nb_states, length_shift, length_connect;
-        // value* action, *reduce, *shift, *connect;
-        // getGroupMarkers(&nb_states, &length_shift, &length_connect, &action, &reduce, &shift, &connect, buffer);
-        getGroupMarkers(aut,buffer);
+        loadInfosFromBuffer(aut,buffer);
     }
 }

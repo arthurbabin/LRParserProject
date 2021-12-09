@@ -10,8 +10,6 @@ typedef struct automaton_abs* automaton;
 
 automaton createEmptyAutomaton();
 
-void getGroupMarkers(automaton* aut, unsigned char buffer[]);
-
 automaton createEmptyAutomaton();
 
 void loadAutomaton(automaton*, char*);
