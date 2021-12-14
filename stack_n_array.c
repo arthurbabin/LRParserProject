@@ -25,6 +25,10 @@ void push(stack* s, value e){
 };
 
 value pop(stack* s){
+    if(stackIsEmpty(*s)){
+        perror("pop on empty stack");
+        exit(1);
+    }
     value res = (*s)->v;
     stack tmp = *s;
     *s = (*s)->next;

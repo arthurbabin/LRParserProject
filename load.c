@@ -88,44 +88,46 @@ void loadAutomaton(automaton *aut, char* path_to_automaton){
         fin=fopen(path_to_automaton, "rb");
         unsigned char buffer[size];
         if (buffer==NULL){
-            perror("malloc");
+            perror("buffer init");
             return;
         }
         fread(buffer,sizeof(buffer),1,fin);
         loadInfosFromBuffer(aut,buffer);
+        // free(buffer);
     }
 }
 
-int findShiftNumber(automaton* aut, int state, int c){
-    return 0;
+int findShiftOrConnectNumber(value* array, int length_shift, value state, value character){
+    for(int i=0;i<length_shift;i++){
+        if(array[i]==state && array[i+1]==character){
+            return array[i+2];
+        }
+    }
+    perror("shift or connect number not found");
+    return -1;
 }
 
-int findConnectNumber(automaton* aut, int state, int c){
-    return 0;
-}
-
-int recognize(automaton* aut, stack user_input){
+char* recognize(automaton* aut, stack user_input){
     stack sta = createEmptyStack();
+    char* rejected = (char*) malloc(25 * sizeof(char));;
+    value curr_char,curr_state;
     push(&sta,0);
-    while(!stackIsEmpty(sta)){
-        value curr_char = pop(&user_input);
-        value curr_state = head(sta);
-        int action_number = (*aut)->action[curr_state * 128 + curr_char];
+    while(!stackIsEmpty(user_input) && !stackIsEmpty(sta)){
+        curr_char = pop(&user_input);
+        curr_state = head(sta);
+        int action_number = ((*aut)->action)[curr_state * 128 + curr_char];
         switch (action_number) {
             case 1:{
                 // accept
-                return 1;
+                return "Accepted";
                 break;
             }
-
             case 2: {
                 // shift
-                int shift_number = findShiftNumber(aut, curr_state,curr_char);
+                int shift_number = findShiftOrConnectNumber((*aut)->shift,(*aut)->length_shift, curr_state,curr_char);
                 push(&sta,shift_number);
                 break;
             }
-            
-
             case 3: {
                 // reduce
                 int reduce_number = (*aut)->reduce[curr_state];
@@ -135,16 +137,19 @@ int recognize(automaton* aut, stack user_input){
                 }
                 // connect
                 int connect_state = head(sta);
-                int connect_number = findConnectNumber(aut, connect_state, reduce_char);
+                int connect_number = findShiftOrConnectNumber((*aut)->connect,(*aut)->length_connect,connect_state,reduce_char);
                 push(&sta, connect_number);
                 push(&user_input, curr_char);
                 break;
             }
-            
-            default:
-            // reject
-            return 0;
+            default: {
+                // reject
+                // 
+                sprintf(rejected, "Rejected at state n°%i",curr_state);
+                return rejected;
+            }
         }
     }
-    return 0;
+    sprintf(rejected,"Rejected at state n°%i",curr_state);
+    return rejected;
 }

@@ -14,4 +14,4 @@ void loadAutomaton(automaton*, char*);
 
 void printAutomaton(automaton aut);
 
-int recognize(automaton*, stack);
+char* recognize(automaton*, stack);
