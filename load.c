@@ -111,9 +111,11 @@ char* recognize(automaton* aut, stack user_input){
     stack sta = createEmptyStack();
     char* rejected = (char*) malloc(25 * sizeof(char));;
     value curr_char,curr_state;
+    int position = 0;
     push(&sta,0);
     while(!stackIsEmpty(user_input) && !stackIsEmpty(sta)){
         curr_char = pop(&user_input);
+        position += 1;
         curr_state = head(sta);
         int action_number = ((*aut)->action)[curr_state * 128 + curr_char];
         switch (action_number) {
@@ -140,16 +142,29 @@ char* recognize(automaton* aut, stack user_input){
                 int connect_number = findShiftOrConnectNumber((*aut)->connect,(*aut)->length_connect,connect_state,reduce_char);
                 push(&sta, connect_number);
                 push(&user_input, curr_char);
+                position -= 1;
                 break;
             }
             default: {
                 // reject
-                // 
-                sprintf(rejected, "Rejected at state n°%i",curr_state);
+                switch(position){
+                    case 1:
+                        sprintf(rejected, curr_char==10?"Rejected: empty":"Rejected: 1st character");
+                        break;
+                    case 2:
+                        sprintf(rejected, "Rejected: 2nd character");
+                        break;
+                    case 3:
+                        sprintf(rejected, "Rejected: 3rd character");
+                        break;
+                    default:
+                        sprintf(rejected, "Rejected: %ith character",position);
+                        break;
+                }
                 return rejected;
             }
         }
     }
-    sprintf(rejected,"Rejected at state n°%i",curr_state);
+    sprintf(rejected, "Rejected:  empty");
     return rejected;
 }

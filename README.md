@@ -1,2 +1,2 @@
-# LRParserProject
- that's my project in C
+# LR1 Parser Project
+ Project in C

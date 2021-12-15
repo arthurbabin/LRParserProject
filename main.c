@@ -83,7 +83,7 @@ int main(int argc, char** argv){
         automaton aut = createEmptyAutomaton();
         stack line;
         loadAutomaton(&aut, argv[1]);
-        printf("File %s correctly read, please enter your inputs [^C to escape] :\n",argv[1]);
+        printf("File \"%s\" correctly read, please enter your inputs [^C to escape] :\n",argv[1]);
         while(1){    
             getUserInput(user_input);
             line = createEmptyStack();
