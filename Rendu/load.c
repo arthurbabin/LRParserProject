@@ -140,7 +140,7 @@ void loadAutomaton(automaton *aut, char* path_to_automaton){
     }
     off_t size = properties.st_size;
     if (size > 0){
-        FILE *fin;
+        FILE *fin; 
         fin=fopen(path_to_automaton, "rb");
         unsigned char buffer[size];
         if (buffer==NULL){
